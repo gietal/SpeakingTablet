@@ -13,7 +13,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.gietal.speakingtablet.R;
+import com.gietal.speakingtablet.models.ButtonInfo;
 import com.gietal.speakingtablet.recycler.ButtonRecyclerAdapter;
+import com.gietal.speakingtablet.recycler.IButtonRecyclerListener;
 import com.gietal.speakingtablet.services.ButtonProvider;
 
 /**
@@ -21,7 +23,17 @@ import com.gietal.speakingtablet.services.ButtonProvider;
  * Use the {@link BottomCategoriesFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class BottomCategoriesFragment extends Fragment {
+public class BottomCategoriesFragment extends Fragment implements IButtonRecyclerListener {
+
+    public IRecyclerFragmentListener getListener() {
+        return listener;
+    }
+
+    public void setListener(IRecyclerFragmentListener listener) {
+        this.listener = listener;
+    }
+
+    private IRecyclerFragmentListener listener;
 
     public BottomCategoriesFragment() {
         // Required empty public constructor
@@ -53,6 +65,7 @@ public class BottomCategoriesFragment extends Fragment {
 
         // then create the adapter
         ButtonRecyclerAdapter adapter = new ButtonRecyclerAdapter(new ButtonProvider(), "main");
+        adapter.setListener(this);
         recylerView.setAdapter(adapter);
 
         // layout the recycler view
@@ -63,4 +76,10 @@ public class BottomCategoriesFragment extends Fragment {
         return v;
     }
 
+    @Override
+    public void onClicked(ButtonRecyclerAdapter sender, ButtonInfo buttonInfo) {
+        if (listener != null) {
+            listener.onCLicked(this, sender, buttonInfo);
+        }
+    }
 }

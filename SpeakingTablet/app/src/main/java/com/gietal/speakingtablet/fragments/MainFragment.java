@@ -6,11 +6,14 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.gietal.speakingtablet.R;
+import com.gietal.speakingtablet.models.ButtonInfo;
+import com.gietal.speakingtablet.recycler.ButtonRecyclerAdapter;
 
 
 /**
@@ -18,7 +21,9 @@ import com.gietal.speakingtablet.R;
  * Use the {@link MainFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MainFragment extends Fragment {
+public class MainFragment extends Fragment implements IRecyclerFragmentListener {
+
+    BottomCategoriesFragment bottomCategoriesFragment;
 
     public MainFragment() {
 
@@ -57,8 +62,14 @@ public class MainFragment extends Fragment {
         // since we're on a fragment, we need to get the activity first
         FragmentManager fm = getActivity().getSupportFragmentManager();
 
-        fm.beginTransaction().add(R.id.mainBottomContainer, BottomCategoriesFragment.newInstance()).commit();
+        bottomCategoriesFragment = BottomCategoriesFragment.newInstance();
+        bottomCategoriesFragment.setListener(this);
+        fm.beginTransaction().add(R.id.mainBottomContainer, bottomCategoriesFragment).commit();
         return v;
     }
 
+    @Override
+    public void onCLicked(Fragment sender, ButtonRecyclerAdapter recycler, ButtonInfo buttonInfo) {
+        Log.d(this.getClass().getName(), "onClicked: [" + buttonInfo.getCategory() + ", " + buttonInfo.getTitle() + "]");
+    }
 }

@@ -1,9 +1,15 @@
 package com.gietal.speakingtablet.models;
 
-public class LeafButton {
+public class ButtonInfo {
+    public enum Type {
+        Category,
+        Item
+    }
+
     String id;
     String title;
     String category;
+    Type type;
     String soundId;
     String imageId;
 
@@ -15,10 +21,11 @@ public class LeafButton {
         return category;
     }
 
-    public LeafButton(String id, String title, String category, String soundId, String imageId) {
+    public ButtonInfo(String id, String title, String category, Type type, String soundId, String imageId) {
         this.id = id;
         this.title = title;
         this.category = category;
+        this.type = type;
         this.soundId = soundId;
         this.imageId = imageId;
     }

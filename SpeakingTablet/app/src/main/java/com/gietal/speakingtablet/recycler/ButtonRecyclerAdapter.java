@@ -8,16 +8,26 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.gietal.speakingtablet.models.LeafButton;
+import com.gietal.speakingtablet.models.ButtonInfo;
 import com.gietal.speakingtablet.services.ButtonProvider;
 import com.gietal.speakingtablet.R;
 
 import java.util.ArrayList;
 
-public class ButtonRecyclerAdapter extends RecyclerView.Adapter<ButtonRecyclerViewHolder> {
+public class ButtonRecyclerAdapter extends RecyclerView.Adapter<ButtonRecyclerViewHolder> implements IButtonRecyclerViewHolderListener {
 
     private ButtonProvider provider;
     private String buttonCategory;
+
+    public IButtonRecyclerListener getListener() {
+        return listener;
+    }
+
+    public void setListener(IButtonRecyclerListener listener) {
+        this.listener = listener;
+    }
+
+    private IButtonRecyclerListener listener;
 
     public ButtonRecyclerAdapter(ButtonProvider provider, String category) {
         this.provider = provider;
@@ -28,14 +38,14 @@ public class ButtonRecyclerAdapter extends RecyclerView.Adapter<ButtonRecyclerVi
     @Override
     public ButtonRecyclerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View holderView = LayoutInflater.from(parent.getContext()).inflate(R.layout.holder_leaf_button, parent, false);
-        return new ButtonRecyclerViewHolder(holderView);
+        return new ButtonRecyclerViewHolder(holderView, this);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ButtonRecyclerViewHolder holder, int position) {
-        ArrayList<LeafButton> buttons =  provider.getButtonsForCategory(buttonCategory);
+        ArrayList<ButtonInfo> buttons =  provider.getButtonsForCategory(buttonCategory);
 
-        LeafButton button = buttons.get(position);
+        ButtonInfo button = buttons.get(position);
         if (button == null) {
             Log.e("ButtonRecyclerAdapter", "button is null for position " + position + ". size is: " + buttons.size());
             return;
@@ -52,5 +62,13 @@ public class ButtonRecyclerAdapter extends RecyclerView.Adapter<ButtonRecyclerVi
         }
 
         return buttons.size();
+    }
+
+    @Override
+    public void onClicked(ButtonRecyclerViewHolder sender) {
+//        Log.d(this.getClass().getName(), "onButtonClicked");
+        if (listener != null) {
+            listener.onClicked(this, sender.getModel());
+        }
     }
 }
