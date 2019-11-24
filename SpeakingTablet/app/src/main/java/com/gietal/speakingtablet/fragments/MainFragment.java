@@ -24,6 +24,7 @@ import com.gietal.speakingtablet.recycler.ButtonRecyclerAdapter;
 public class MainFragment extends Fragment implements IRecyclerFragmentListener {
 
     BottomCategoriesFragment bottomCategoriesFragment;
+    CenterContainerFragment centerContainerFragment;
 
     public MainFragment() {
 
@@ -65,11 +66,20 @@ public class MainFragment extends Fragment implements IRecyclerFragmentListener 
         bottomCategoriesFragment = BottomCategoriesFragment.newInstance();
         bottomCategoriesFragment.setListener(this);
         fm.beginTransaction().add(R.id.mainBottomContainer, bottomCategoriesFragment).commit();
+
+        centerContainerFragment = CenterContainerFragment.newInstance();
+        centerContainerFragment.setListener(this);
+        fm.beginTransaction().add(R.id.mainCenterContainer, centerContainerFragment).commit();
+
         return v;
     }
 
     @Override
     public void onCLicked(Fragment sender, ButtonRecyclerAdapter recycler, ButtonInfo buttonInfo) {
         Log.d(this.getClass().getName(), "onClicked: [" + buttonInfo.getCategory() + ", " + buttonInfo.getTitle() + "]");
+
+        if (sender == bottomCategoriesFragment) {
+            centerContainerFragment.setCategory(buttonInfo.getTitle());
+        }
     }
 }
